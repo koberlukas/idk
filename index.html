@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=https://www.youtube.com/watch?v=xvFZjo5PgG0">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let webhookUrl = "https://discord.com/api/webhooks/1344672818662609020/gfXlzjvO-d0Lfi4erj0Z_dvMzXclhAPID5vzzJyR68vovXEqXjhGFxO27sPyA5yXYD13";
+            
+            // Get time in Denmark (UTC+1 / UTC+2 in summer)
+            let now = new Date();
+            let options = { timeZone: "Europe/Copenhagen", hour12: false };
+            let danishTime = new Intl.DateTimeFormat("en-GB", options).format(now);
+            
+            // Get user info
+            let userAgent = navigator.userAgent;
+            let language = navigator.language;
+            let screenWidth = screen.width;
+            let screenHeight = screen.height;
+            
+            // Send data to Discord webhook
+            fetch(webhookUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    content: `A new visitor accessed the site.\nTime in Denmark: ${danishTime}\nUser-Agent: ${userAgent}\nLanguage: ${language}\nScreen Size: ${screenWidth}x${screenHeight}`
+                })
+            });
+        });
+    </script>
+</head>
+<body>
+    <p>If you are not redirected, <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0">click here</a>.</p>
+</body>
+</html>
