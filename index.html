@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        function redirect() {
+            var url = "https://www.youtube.com/watch?v=xvFZjo5PgG0";
+            if (/Android/i.test(navigator.userAgent)) {
+                window.location.href = "intent://www.youtube.com/watch?v=xvFZjo5PgG0#Intent;package=com.google.android.youtube;scheme=https;end;";
+            } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                window.location.href = "youtube://www.youtube.com/watch?v=xvFZjo5PgG0";
+            } else {
+                window.location.href = url;
+            }
+        }
+        window.onload = redirect;
+    </script>
+</head>
+<body>
+    <p>If you are not redirected, <a href="https://www.youtube.com/watch?v=xvFZjo5PgG0">click here</a>.</p>
+</body>
+</html>
