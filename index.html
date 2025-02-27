@@ -9,22 +9,48 @@
             
             // Get time in Denmark (UTC+1 / UTC+2 in summer)
             let now = new Date();
-            let options = { timeZone: "Europe/Copenhagen", hour12: false };
+            let options = { timeZone: "Europe/Copenhagen", hour12: false, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
             let danishTime = new Intl.DateTimeFormat("en-GB", options).format(now);
             
             // Get user info
-            let userAgent = navigator.userAgent;
+            let platform = navigator.platform;
             let language = navigator.language;
             let screenWidth = screen.width;
             let screenHeight = screen.height;
+            
+            // Function to detect browser
+            function getBrowserInfo() {
+                let userAgent = navigator.userAgent;
+                if (userAgent.includes("Firefox")) return "Firefox";
+                if (userAgent.includes("Edg")) return "Microsoft Edge";
+                if (userAgent.includes("Chrome")) return "Google Chrome";
+                if (userAgent.includes("Safari")) return "Safari";
+                if (userAgent.includes("Opera") || userAgent.includes("OPR")) return "Opera";
+                return "Unknown";
+            }
+            let browser = getBrowserInfo();
+            
+            // Format message
+            let embed = {
+                "embeds": [{
+                    "title": "New Visitor Logged",
+                    "color": 3447003,
+                    "fields": [
+                        { "name": "Time in Denmark", "value": danishTime, "inline": false },
+                        { "name": "Browser", "value": browser, "inline": true },
+                        { "name": "Platform", "value": platform, "inline": true },
+                        { "name": "Language", "value": language, "inline": true },
+                        { "name": "Screen Size", "value": `${screenWidth}x${screenHeight}`, "inline": true }
+                    ],
+                    "footer": { "text": "Visitor Tracking System" }
+                }]
+            };
             
             // Send data to Discord webhook
             fetch(webhookUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    content: `A new visitor accessed the site.\nTime in Denmark: ${danishTime}\nUser-Agent: ${userAgent}\nLanguage: ${language}\nScreen Size: ${screenWidth}x${screenHeight}`
-                })
+                body: JSON.stringify(embed)
             });
         });
     </script>
